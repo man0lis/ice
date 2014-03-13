@@ -55,8 +55,8 @@ void apply_diffusion(float **density, float **density_old, float diff, float dt)
         for(i=1; i<=SIZE_X; i++) {
             for(j=1; j<=SIZE_Y; j++) {
                 // calculate diffusion for every pixel
-                density[i][j] = ( density_old[i][j] + 
-                                  a * ( density[i-1][j] + 
+                density[i][j] = ( density_old[i][j] +
+                                  a * ( density[i-1][j] +
                                         density[i+1][j] +
                                         density[i][j-1] +
                                         density[i][j+1] )
@@ -79,19 +79,19 @@ apply_advection(float **density, float **density_old, vector_t **velocity, float
 
             float x = i - dt_x * velocity[i][j].x;
             float y = j - dt_y * velocity[i][j].y;
-            
+
             // check if x coordinate is out of range
             if (x < 0.5) x = 0.5;
             if (x > SIZE_X + 0.5) x = SIZE_X + 0.5;
 
-            int i0 = (int) x; 
+            int i0 = (int) x;
             int i1 = i0 + 1;
 
             // check if y coordinate is out of range
             if (y < 0.5) y = 0.5;
             if (y > SIZE_Y + 0.5) x = SIZE_Y + 0.5;
 
-            int j0 = (int) y; 
+            int j0 = (int) y;
             int j1 = j0 +1;
 
             //TODO wtf?
@@ -103,7 +103,7 @@ apply_advection(float **density, float **density_old, vector_t **velocity, float
             density[i][j] = s0 * (t0 * density_old[i0][j0] +
                                   t1 * density_old[i0][j1]) +
                             s1 * (t0 * density_old[i1][j0] +
-                                  t1 * density_old[i1][j1]);  
+                                  t1 * density_old[i1][j1]);
 
         }
     }
@@ -128,7 +128,7 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
 }
 
 void velocity_step(float **velocity, float **forcefield, float visc, float dt) {
-    
+
 }
 
 int main(int argc, char *argv) {
