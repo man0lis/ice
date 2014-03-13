@@ -68,7 +68,7 @@ void apply_diffusion(float **density, float **density_old, float diff, float dt)
     }
 }
 
-apply_advection(float **density, float **density_old, vector_t **velocity, float dt) {
+void apply_advection(float **density, float **density_old, vector_t **velocity, float dt) {
     int i,j;
 
     float dt_x = dt*SIZE_X;
