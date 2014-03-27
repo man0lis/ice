@@ -7,8 +7,15 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 void putPixel(SDL_Renderer* renderer, int x, int y, int alpha) {
+  SDL_Rect rect;
+  rect.x = x;
+  rect.y = y;
+  rect.w = 10;
+  rect.h = 10;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, alpha);
-  SDL_RenderDrawPoint(renderer, x, y);
+  //SDL_RenderDrawPoint(renderer, x, y);
+  //SDL_RenderDrawRect(renderer, &rect);
+  SDL_RenderFillRect(renderer, &rect);
 }
 
 int main(int argc, char *argv) {
