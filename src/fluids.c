@@ -37,11 +37,15 @@ void add_vector_field(vector_t **field, vector_t **sources, float dt) {
     }
 }
 
-void set_density_boundary(float **density) {
+void set_field_boundary(float **density) {
 
 }
 
-void set_velocity_boundary(vector_t **velocity) {
+void set_vector_field_boundary(vector_t **velocity) {
+
+}
+
+void set_forcefield_boundary(vector_t **forcefield) {
 
 }
 
@@ -65,7 +69,7 @@ void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) 
             }
         }
         // reset boundary after diffuse
-        set_density_boundary(field);
+        set_field_boundary(field);
     }
 }
 
