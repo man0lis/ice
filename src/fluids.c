@@ -55,16 +55,17 @@ void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) 
         for(i=1; i<=SIZE_X; i++) {
             for(j=1; j<=SIZE_Y; j++) {
                 // calculate diffusion for every pixel
-                density[i][j] = ( density_old[i][j] +
-                                  a * ( density[i-1][j] +
-                                        density[i+1][j] +
-                                        density[i][j-1] +
-                                        density[i][j+1] )
-                                ) / (1+4*a);
+                field[i][j] = ( field_old[i][j] +
+                               a * ( field[i-1][j] +
+                                     field[i+1][j] +
+                                     field[i][j-1] +
+                                     field[i][j+1]
+                                   )
+                              ) / (1+4*a);
             }
         }
         // reset boundary after diffuse
-        set_density_boundary(density);
+        set_density_boundary(field);
     }
 }
 
