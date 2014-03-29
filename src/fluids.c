@@ -212,6 +212,43 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
     apply_advection_1d(density, density_old, velocity, dt);
 }
 
+void project(vector_t **velocity, float **p, float **div) {
+    int i, j, k;
+
+    // TODO: discribe this
+    float h_x = 1.0/SIZE_X;
+    float h_y = 1.0/SIZE_Y;
+
+    for(i=1; i<=SIZE_X; i++) {
+        for(j=1; j<=SIZE_Y; j++) {
+            div[i][j] = -0.5 * h_x * (velocity[i+1][j].x - velocity[i-1][j].x +
+                                      velocity[i][j+1].y - velocity[i][j-1].y);
+            p[i][j] = 0;
+        }
+    }
+    set_field_boundary(div);
+    set_field_boundary(p);
+
+    // TODO: explain Gauss-Seidel solving below
+    for(k=0; k<20; k++) {
+        for(i=1; i<=SIZE_X; i++) {
+            for(j=1; j<=SIZE_Y; j++) {
+                // y -> p             // x -> div
+                p[i][j] = (div[i][j] + p[i-1][j] + p[i+1][j] +
+                                       p[i][j-1] + p[i][j+1]) / 4;
+            }
+        }
+        set_field_boundary(p);
+    }
+
+    for(i=1; i<=SIZE_X; i++) {
+        for(j=1; j<=SIZE_Y; j++) {
+            velocity[i][j].x -= 0.5 * (p[i+1][j] - p[i-1][j]) / h_x;
+            velocity[i][j].y -= 0.5 * (p[i][j+1] - p[i][j-1]) / h_y;
+        }
+    }
+    set_vector_field_boundary(velocity);
+}
 void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, float dt) {
 
 }
