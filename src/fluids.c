@@ -74,7 +74,7 @@ void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) 
 }
 
 
-void apply_diffusion_2d(vetcor_t **vector_field, vector_t **vector_field_old, float diff, float dt) {
+void apply_diffusion_2d(vector_t **vector_field, vector_t **vector_field_old, float diff, float dt) {
     int i, j, k;
     // TODO: diffusion rate?
     float a = dt*diff*SIZE_X*SIZE_Y;
