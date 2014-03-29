@@ -271,7 +271,28 @@ void join_vector_field(vector_t **vector_field, float **x, float **y, int x_len,
 }
 
 void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, float dt) {
+    add_vector_field(velocity, forcefield, dt);
 
+    SWAP(forcefield, velocity);
+
+    apply_diffusion_2d(velocity, forcefield, viscosity, dt);
+
+    // this might be very slow -> find better solution ... maybe pointers
+    // and it is wrong ... fix asap
+    float p[SIZE_X+2][SIZE_Y+2];
+    float div[SIZE_X+2][SIZE_Y+2];
+    split_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
+    project(velocity, p, div);
+    join_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
+
+    SWAP(forcefield, velocity);
+
+    // in case of fail maybe look here
+    apply_advection_2d(velocity, forcefield, forcefield, dt);
+
+    split_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
+    project(velocity, p, div);
+    join_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
 }
 
 int main(int argc, char *argv) {
