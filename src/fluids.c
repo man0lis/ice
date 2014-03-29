@@ -249,6 +249,27 @@ void project(vector_t **velocity, float **p, float **div) {
     }
     set_vector_field_boundary(velocity);
 }
+
+void split_vector_field(vector_t **vector_field, float **x, float **y, int x_len, int y_len) {
+    int i,j;
+    for(i=0; i<x_len; i++) {
+        for(j=0; j<y_len; j++) {
+            x[i][j] = vector_field[i][j].x;
+            y[i][j] = vector_field[i][j].y;
+        }
+    }
+}
+
+void join_vector_field(vector_t **vector_field, float **x, float **y, int x_len, int y_len) {
+    int i,j;
+    for(i=0; i<x_len; i++) {
+        for(j=0; j<y_len; j++) {
+            vector_field[i][j].x = x[i][j];
+            vector_field[i][j].y = y[i][j];
+        }
+    }
+}
+
 void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, float dt) {
 
 }
