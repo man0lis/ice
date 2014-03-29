@@ -161,7 +161,7 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
     apply_advection_1d(density, density_old, velocity, dt);
 }
 
-void velocity_step(float **velocity, float **forcefield, float visc, float dt) {
+void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, float dt) {
 
 }
 
