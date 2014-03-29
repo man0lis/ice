@@ -69,7 +69,7 @@ void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) 
     }
 }
 
-void apply_advection(float **density, float **density_old, vector_t **velocity, float dt) {
+void apply_advection_1d(float **field, float **field_old, vector_t **vector_field, float dt) {
     int i,j;
 
     float dt_x = dt*SIZE_X;
@@ -78,8 +78,8 @@ void apply_advection(float **density, float **density_old, vector_t **velocity, 
     for(i=1; i<=SIZE_X; i++) {
         for(j=1; j<=SIZE_Y; j++) {
 
-            float x = i - dt_x * velocity[i][j].x;
-            float y = j - dt_y * velocity[i][j].y;
+            float x = i - dt_x * vector_field[i][j].x;
+            float y = j - dt_y * vector_field[i][j].y;
 
             // check if x coordinate is out of range
             if (x < 0.5) x = 0.5;
@@ -101,14 +101,14 @@ void apply_advection(float **density, float **density_old, vector_t **velocity, 
             float t1 = y - j0;
             float t0 = 1 - t1;
 
-            density[i][j] = s0 * (t0 * density_old[i0][j0] +
-                                  t1 * density_old[i0][j1]) +
-                            s1 * (t0 * density_old[i1][j0] +
-                                  t1 * density_old[i1][j1]);
+            field[i][j] = s0 * (t0 * field_old[i0][j0] +
+                                  t1 * field_old[i0][j1]) +
+                            s1 * (t0 * field_old[i1][j0] +
+                                  t1 * field_old[i1][j1]);
 
         }
     }
-    set_density_boundary(density);
+    set_field_boundary(field);
 }
 
 void density_step(float **density, float **density_old, vector_t **velocity, float diff, float dt) {
@@ -125,7 +125,7 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
     SWAP(density_old, density);
 
     // apply advection in same way diffusion is applied
-    apply_advection(density, density_old, velocity, dt);
+    apply_advection_1d(density, density_old, velocity, dt);
 }
 
 void velocity_step(float **velocity, float **forcefield, float visc, float dt) {
