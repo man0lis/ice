@@ -45,7 +45,7 @@ void set_velocity_boundary(vector_t **velocity) {
 
 }
 
-void apply_diffusion(float **density, float **density_old, float diff, float dt) {
+void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) {
     int i, j, k;
     // TODO: diffusion rate?
     float a = dt*diff*SIZE_X*SIZE_Y;
@@ -118,7 +118,7 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
     SWAP(density_old, density);
 
     // apply diffusion to 2nd field with results from prev operation as oldfield
-    apply_diffusion(density, density_old, diff, dt);
+    apply_diffusion_1d(density, density_old, diff, dt);
 
     // move result again
     SWAP(density_old, density);
