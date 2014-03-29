@@ -148,6 +148,53 @@ void apply_advection_1d(float **field, float **field_old, vector_t **vector_fiel
     set_field_boundary(field);
 }
 
+
+void apply_advection_2d(vector_t **vector_field, vector_t **vector_field_old, vector_t **in_vectors, float dt) {
+    int i,j;
+
+    float dt_x = dt*SIZE_X;
+    float dt_y = dt*SIZE_Y;
+
+    for(i=1; i<=SIZE_X; i++) {
+        for(j=1; j<=SIZE_Y; j++) {
+
+            float x = i - dt_x * in_vectors[i][j].x;
+            float y = j - dt_y * in_vectors[i][j].y;
+
+            // check if x coordinate is out of range
+            if (x < 0.5) x = 0.5;
+            if (x > SIZE_X + 0.5) x = SIZE_X + 0.5;
+
+            int i0 = (int) x;
+            int i1 = i0 + 1;
+
+            // check if y coordinate is out of range
+            if (y < 0.5) y = 0.5;
+            if (y > SIZE_Y + 0.5) x = SIZE_Y + 0.5;
+
+            int j0 = (int) y;
+            int j1 = j0 +1;
+
+            //TODO wtf?
+            float s1 = x - i0;
+            float s0 = 1 - s1;
+            float t1 = y - j0;
+            float t0 = 1 - t1;
+
+            vector_field[i][j].x = s0 * (t0 * vector_field_old[i0][j0].x +
+                                  t1 * vector_field_old[i0][j1].x) +
+                            s1 * (t0 * vector_field_old[i1][j0].x +
+                                  t1 * vector_field_old[i1][j1].x);
+
+            vector_field[i][j].y = s0 * (t0 * vector_field_old[i0][j0].y +
+                                  t1 * vector_field_old[i0][j1].y) +
+                            s1 * (t0 * vector_field_old[i1][j0].y +
+                                  t1 * vector_field_old[i1][j1].y);
+        }
+    }
+    set_vector_field_boundary(vector_field);
+}
+
 void density_step(float **density, float **density_old, vector_t **velocity, float diff, float dt) {
     // apply old density field
     add_float_field(density, density_old, dt);
