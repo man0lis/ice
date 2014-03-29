@@ -69,6 +69,39 @@ void apply_diffusion_1d(float **field, float **field_old, float diff, float dt) 
     }
 }
 
+
+void apply_diffusion_2d(vetcor_t **vector_field, vector_t **vector_field_old, float diff, float dt) {
+    int i, j, k;
+    // TODO: diffusion rate?
+    float a = dt*diff*SIZE_X*SIZE_Y;
+
+    // TODO: explain Gauss-Seidel solving below
+    for(k=0; k<20; k++) {
+        for(i=1; i<=SIZE_X; i++) {
+            for(j=1; j<=SIZE_Y; j++) {
+                // calculate diffusion for every vector
+                vector_field[i][j].x = ( vector_field_old[i][j].x +
+                                        a * ( vector_field[i-1][j].x +
+                                              vector_field[i+1][j].x +
+                                              vector_field[i][j-1].x +
+                                              vector_field[i][j+1].x
+                                            )
+                                       ) / (1+4*a);
+
+                vector_field[i][j].y = ( vector_field_old[i][j].y +
+                                        a * ( vector_field[i-1][j].y +
+                                              vector_field[i+1][j].y +
+                                              vector_field[i][j-1].y +
+                                              vector_field[i][j+1].y
+                                            )
+                                       ) / (1+4*a);
+            }
+        }
+        // reset boundary after diffuse
+        set_vector_field_boundary(vector_field);
+    }
+}
+
 void apply_advection_1d(float **field, float **field_old, vector_t **vector_field, float dt) {
     int i,j;
 
