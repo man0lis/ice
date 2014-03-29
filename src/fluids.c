@@ -296,6 +296,7 @@ void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, 
 }
 
 int main(int argc, char *argv) {
+    //TODO: malloc arrays and drop 2d arrays entriely
     vector_t velocity[SIZE_X+2][SIZE_Y+2];
     vector_t velocity_old[SIZE_X+2][SIZE_Y+2];
     float density[SIZE_X+2][SIZE_Y+2];
