@@ -45,7 +45,13 @@ void set_vector_field_boundary(vector_t **velocity) {
 
 }
 
-void set_forcefield_boundary(vector_t **forcefield) {
+void set_forcefield_boundary(vector_t **forcefield, int selector) {
+    if(selector == 2) {
+        //do both
+    }
+    else {
+        //only do y part
+    }
 
 }
 
@@ -212,61 +218,51 @@ void density_step(float **density, float **density_old, vector_t **velocity, flo
     apply_advection_1d(density, density_old, velocity, dt);
 }
 
-void project(vector_t **velocity, float **p, float **div) {
+void project(vector_t **velocity, vector_t **forcefield) {
     int i, j, k;
 
     // TODO: discribe this
     float h_x = 1.0/SIZE_X;
     float h_y = 1.0/SIZE_Y;
 
+    // just to keep code readable
+    vector_t **p = forcefield;
+    vector_t **div = forcefield;
+
+
     for(i=1; i<=SIZE_X; i++) {
         for(j=1; j<=SIZE_Y; j++) {
-            div[i][j] = -0.5 * h_x * (velocity[i+1][j].x - velocity[i-1][j].x +
-                                      velocity[i][j+1].y - velocity[i][j-1].y);
-            p[i][j] = 0;
+            div[i][j].x = -0.5 * h_x * (velocity[i+1][j].x - velocity[i-1][j].x +
+                                        velocity[i][j+1].y - velocity[i][j-1].y);
+            p[i][j].y = 0;
         }
     }
-    set_field_boundary(div);
-    set_field_boundary(p);
+    set_forcefield_boundary(forcefield,2);
 
     // TODO: explain Gauss-Seidel solving below
     for(k=0; k<20; k++) {
         for(i=1; i<=SIZE_X; i++) {
             for(j=1; j<=SIZE_Y; j++) {
                 // y -> p             // x -> div
-                p[i][j] = (div[i][j] + p[i-1][j] + p[i+1][j] +
-                                       p[i][j-1] + p[i][j+1]) / 4;
+                p[i][j].y = (div[i][j].x + p[i-1][j].y + p[i+1][j].y +
+                                           p[i][j-1].y + p[i][j+1].y) / 4;
             }
         }
-        set_field_boundary(p);
+        set_forcefield_boundary(p,1);
     }
 
     for(i=1; i<=SIZE_X; i++) {
         for(j=1; j<=SIZE_Y; j++) {
-            velocity[i][j].x -= 0.5 * (p[i+1][j] - p[i-1][j]) / h_x;
-            velocity[i][j].y -= 0.5 * (p[i][j+1] - p[i][j-1]) / h_y;
+            velocity[i][j].x -= 0.5 * (p[i+1][j].y - p[i-1][j].y) / h_x;
+            velocity[i][j].y -= 0.5 * (p[i][j+1].y - p[i][j-1].y) / h_y;
         }
     }
     set_vector_field_boundary(velocity);
 }
 
-void split_vector_field(vector_t **vector_field, float **x, float **y, int x_len, int y_len) {
-    int i,j;
-    for(i=0; i<x_len; i++) {
-        for(j=0; j<y_len; j++) {
-            x[i][j] = vector_field[i][j].x;
-            y[i][j] = vector_field[i][j].y;
-        }
     }
 }
 
-void join_vector_field(vector_t **vector_field, float **x, float **y, int x_len, int y_len) {
-    int i,j;
-    for(i=0; i<x_len; i++) {
-        for(j=0; j<y_len; j++) {
-            vector_field[i][j].x = x[i][j];
-            vector_field[i][j].y = y[i][j];
-        }
     }
 }
 
@@ -277,22 +273,14 @@ void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, 
 
     apply_diffusion_2d(velocity, forcefield, viscosity, dt);
 
-    // this might be very slow -> find better solution ... maybe pointers
-    // and it is wrong ... fix asap
-    float p[SIZE_X+2][SIZE_Y+2];
-    float div[SIZE_X+2][SIZE_Y+2];
-    split_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
-    project(velocity, p, div);
-    join_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
+    project(velocity, forcefield);
 
     SWAP(forcefield, velocity);
 
     // in case of fail maybe look here
     apply_advection_2d(velocity, forcefield, forcefield, dt);
 
-    split_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
-    project(velocity, p, div);
-    join_vector_field(forcefield,p,div,SIZE_X+2,SIZE_Y+2);
+    project(velocity, forcefield);
 }
 
 int main(int argc, char *argv) {
