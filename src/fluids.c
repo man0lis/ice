@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 // swap 2 variables or pointers or anything
 #define SWAP(x, y) do { typeof(x) temp##x##y = x; x = y; y = temp##x##y; } while (0)
@@ -260,10 +261,29 @@ void project(vector_t **velocity, vector_t **forcefield) {
     set_vector_field_boundary(velocity);
 }
 
+float **alloc_float_field(unsigned int x_len, unsigned int y_len) {
+    float **field = malloc(x_len * sizeof(float *));
+    field[0] = malloc(x_len * y_len * sizeof(float));
+    int i;
+    for(i = 1; i < x_len; i++) {
+        field[i] = field[0] + i * y_len;
     }
+    return field;
 }
 
+vector_t **alloc_vector_field(unsigned int x_len, unsigned int y_len) {
+vector_t **field = malloc(x_len * sizeof(vector_t *));
+    field[0] = malloc(x_len * y_len * sizeof(vector_t));
+    int i;
+    for(i = 1; i < x_len; i++) {
+        field[i] = field[0] + i * y_len;
     }
+    return field;
+}
+
+void free_field(void **field) {
+    free((void *) field[0]);
+    free((void *) field);
 }
 
 void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, float dt) {
@@ -284,11 +304,10 @@ void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, 
 }
 
 int main(int argc, char *argv) {
-    //TODO: malloc arrays and drop 2d arrays entriely
-    vector_t velocity[SIZE_X+2][SIZE_Y+2];
-    vector_t velocity_old[SIZE_X+2][SIZE_Y+2];
-    float density[SIZE_X+2][SIZE_Y+2];
-    float density_old[SIZE_X+2][SIZE_Y+2];
+    vector_t **velocity = alloc_vector_field(SIZE_X+2,SIZE_Y+2);
+    vector_t **velocity_old = alloc_vector_field(SIZE_X+2, SIZE_Y+2);
+    float **density = alloc_float_field(SIZE_X+2, SIZE_Y+2);
+    float **density_old = alloc_float_field(SIZE_X+2, SIZE_Y+2);
 
 
 
