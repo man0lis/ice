@@ -312,6 +312,14 @@ void velocity_step(vector_t **velocity, vector_t **forcefield, float viscosity, 
     project(velocity, forcefield);
 }
 
+// function that draws a single pixel to a surface
+void draw_pixel(SDL_Surface *Surface, int x, int y, Uint16 color)
+{
+  Uint16 *Pixel;
+  Pixel = (Uint16 *)Surface->pixels + y*Surface->pitch/2 + x*2;
+  *Pixel = color;
+}
+
 int main(int argc, char *argv) {
     vector_t **velocity = alloc_vector_field(SIZE_X+2,SIZE_Y+2);
     vector_t **velocity_old = alloc_vector_field(SIZE_X+2, SIZE_Y+2);
