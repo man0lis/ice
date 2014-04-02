@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL/SDL.h>
+#include <signal.h>
 
 // swap 2 variables or pointers or anything
 #define SWAP(x, y) do { typeof(x) temp##x##y = x; x = y; y = temp##x##y; } while (0)
@@ -13,6 +15,13 @@
 #define TIMESTEP 0.2
 #define DIFF 0.5
 
+// do you whant me to end the programm?
+volatile int stop = 0;
+
+// callback to catch signals
+void signal_callback(int i) {
+        stop=1;
+}
 
 typedef struct vector {
     float x;
@@ -309,7 +318,46 @@ int main(int argc, char *argv) {
     float **density = alloc_float_field(SIZE_X+2, SIZE_Y+2);
     float **density_old = alloc_float_field(SIZE_X+2, SIZE_Y+2);
 
+    //register signal callback
+    signal(SIGINT, signal_callback);    
 
+    // surface that will hold the background
+    SDL_Surface *screen = NULL;
+
+    // initialize SDL video subsystem
+    if(  SDL_Init(SDL_INIT_VIDEO) == -1 ) {
+        return EXIT_FAILURE;
+    }
+
+    // Set up the screen with WINDOW_X*WINDOW_Y px size, 32 bit color and a
+    // softwaresurface
+    screen = SDL_SetVideoMode(SIZE_X, SIZE_Y, 32, SDL_SWSURFACE);
+    if( screen == NULL ) {
+        return EXIT_FAILURE;
+    }
+
+    // Set the window caption
+    SDL_WM_SetCaption("ICE v0.0.1", NULL);
+
+    // create a black surface which will hold the desity paterns
+    SDL_Surface *fluid = SDL_CreateRGBSurface(SDL_SWSURFACE, SIZE_X, SIZE_Y, 32,0,0,0,0);
+
+    while(!stop) {
+        // -- set fields --
+
+        // caluclate fluids
+        //velocity_step();
+        //density_step();
+
+        // -- draw density --
+        // Apply image to screen
+        SDL_BlitSurface(fluid, NULL, screen, NULL);
+        // Update Screen
+        SDL_Flip(screen);
+    }
+
+    // Quit SDL
+    SDL_Quit();
 
     return 0;
 }
