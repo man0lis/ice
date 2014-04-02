@@ -281,7 +281,7 @@ float **alloc_float_field(unsigned int x_len, unsigned int y_len) {
 }
 
 vector_t **alloc_vector_field(unsigned int x_len, unsigned int y_len) {
-vector_t **field = malloc(x_len * sizeof(vector_t *));
+    vector_t **field = malloc(x_len * sizeof(vector_t *));
     field[0] = malloc(x_len * y_len * sizeof(vector_t));
     int i;
     for(i = 1; i < x_len; i++) {
