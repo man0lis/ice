@@ -49,8 +49,25 @@ void add_vector_field(vector_t **field, vector_t **sources, float dt) {
     }
 }
 
-void set_field_boundary(float **density) {
+void set_field_boundary(float **field) {
+    int i;
+    // set top and bottom border
+    for(i=1; i<=SIZE_X; i++) {
+        field[i][0] = field[i][1];
+        field[i][SIZE_Y+1] = field[i][SIZE_Y];
+    }
+    
+    //set left and right border
+    for(i=1; i<=SIZE_Y; i++) {
+        field[0][i] = field[1][i];
+        field[SIZE_X+1][i] = field[SIZE_X][i];
+    }
 
+    //improve corners
+    field[0][0] = 0.5 * (field[1][0] + field[0][1]);
+    field[0][SIZE_Y+1] = 0.5 * (field[1][SIZE_Y+1] + field[0][SIZE_Y]);
+    field[SIZE_X+1][0] = 0.5 * (field[SIZE_X][0] + field[SIZE_X+1][1]);
+    field[SIZE_X+1][SIZE_Y+1] = 0.5 * (field[SIZE_X][SIZE_Y+1] + field[SIZE_X+1][SIZE_Y]);
 }
 
 void set_vector_field_boundary(vector_t **velocity) {
