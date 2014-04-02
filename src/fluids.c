@@ -70,8 +70,30 @@ void set_field_boundary(float **field) {
     field[SIZE_X+1][SIZE_Y+1] = 0.5 * (field[SIZE_X][SIZE_Y+1] + field[SIZE_X+1][SIZE_Y]);
 }
 
-void set_vector_field_boundary(vector_t **velocity) {
+void set_vector_field_boundary(vector_t **vector_field) {
+    int i;
+    // set velocity at top and bottom border in the y direction
+    for(i=1; i<=SIZE_X; i++) {
+        vector_field[i][0].y = -vector_field[i][1].y;
+        vector_field[i][SIZE_Y+1].y = -vector_field[i][SIZE_Y].y;
+    }
+    
+    //set velocity at left and right border in the x direction
+    for(i=1; i<=SIZE_Y; i++) {
+        vector_field[0][i].x = -vector_field[1][i].x;
+        vector_field[SIZE_X+1][i].x = -vector_field[SIZE_X][i].x;
+    }
 
+    //improve corners
+    vector_field[0][0].x = 0.5 * (vector_field[1][0].x + vector_field[0][1].x);
+    vector_field[0][SIZE_Y+1].x = 0.5 * (vector_field[1][SIZE_Y+1].x + vector_field[0][SIZE_Y].x);
+    vector_field[SIZE_X+1][0].x = 0.5 * (vector_field[SIZE_X][0].x + vector_field[SIZE_X+1][1].x);
+    vector_field[SIZE_X+1][SIZE_Y+1].x = 0.5 * (vector_field[SIZE_X][SIZE_Y+1].x + vector_field[SIZE_X+1][SIZE_Y].x);
+    
+    vector_field[0][0].y = 0.5 * (vector_field[1][0].y + vector_field[0][1].y);
+    vector_field[0][SIZE_Y+1].y = 0.5 * (vector_field[1][SIZE_Y+1].y + vector_field[0][SIZE_Y].y);
+    vector_field[SIZE_X+1][0].y = 0.5 * (vector_field[SIZE_X][0].y + vector_field[SIZE_X+1][1].y);
+    vector_field[SIZE_X+1][SIZE_Y+1].y = 0.5 * (vector_field[SIZE_X][SIZE_Y+1].y + vector_field[SIZE_X+1][SIZE_Y].y);
 }
 
 void set_forcefield_boundary(vector_t **forcefield, int selector) {
