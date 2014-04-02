@@ -14,6 +14,8 @@
 #define SIZE_Y 512
 #define TIMESTEP 0.2
 #define DIFF 0.5
+// TODO: fingure this out
+#define VISC 0.1
 
 // do you whant me to end the programm?
 volatile int stop = 0;
@@ -352,10 +354,11 @@ int main(int argc, char *argv) {
 
     while(!stop) {
         // -- set fields --
+        //TODO: set density from gui (maybe velocity)
 
         // caluclate fluids
-        //velocity_step();
-        //density_step();
+        velocity_step(velocity, velocity_old, VISC, TIMESTEP);
+        density_step(density, density_old, velocity, DIFF, TIMESTEP);
 
         // -- draw density --
         // Apply image to screen
