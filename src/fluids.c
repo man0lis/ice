@@ -96,12 +96,13 @@ void set_vector_field_boundary(vector_t **vector_field) {
     vector_field[SIZE_X+1][SIZE_Y+1].y = 0.5 * (vector_field[SIZE_X][SIZE_Y+1].y + vector_field[SIZE_X+1][SIZE_Y].y);
 }
 
-void set_forcefield_boundary(vector_t **forcefield, int selector) {
-    if(selector == 2) {
-        //do both
+//this function applys the operation of set_field_boundary to one component of a vector
+void set_vector_field_boundary_selective(vector_t **forcefield, int selector) {
+    if(selector == 1) {
+        //do x
     }
     else {
-        //only do y part
+        //do y
     }
 
 }
@@ -288,7 +289,8 @@ void project(vector_t **velocity, vector_t **forcefield) {
             p[i][j].y = 0;
         }
     }
-    set_forcefield_boundary(forcefield,2);
+    set_vector_field_boundary_selective(forcefield,1);
+    set_vector_field_boundary_selective(forcefield,2);
 
     // TODO: explain Gauss-Seidel solving below
     for(k=0; k<20; k++) {
@@ -299,7 +301,7 @@ void project(vector_t **velocity, vector_t **forcefield) {
                                            p[i][j-1].y + p[i][j+1].y) / 4;
             }
         }
-        set_forcefield_boundary(p,1);
+        set_vector_field_boundary_selective(p,2);
     }
 
     for(i=1; i<=SIZE_X; i++) {
