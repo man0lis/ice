@@ -13,9 +13,9 @@
 #define SIZE_X 512
 #define SIZE_Y 512
 #define TIMESTEP 0.2
-#define DIFF 0.5
+#define DIFF 0.0005
 // TODO: fingure this out
-#define VISC 0.1
+#define VISC 0.0001
 
 // do you whant me to end the programm?
 volatile int stop = 0;
@@ -437,9 +437,18 @@ int main(int argc, char *argv) {
     // create a black surface which will hold the desity paterns
     SDL_Surface *fluid = SDL_CreateRGBSurface(SDL_SWSURFACE, SIZE_X, SIZE_Y, 32,0,0,0,0);
 
+    // test init
+    int x,y;
+    for(x=SIZE_X/2 - 30; x<=SIZE_X/2 + 30; x++) {
+        for(y=SIZE_Y/2 - 30; y<=SIZE_Y/2 + 30; y++) {
+            density[x][y] = 1;
+        }
+    }
+
     while(!stop) {
         // -- set fields --
         //TODO: set density from gui (maybe velocity)
+        //TODO: set velocity
 
         // caluclate fluids
         velocity_step(velocity, velocity_old, VISC, TIMESTEP);
