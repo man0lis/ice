@@ -495,6 +495,7 @@ int main(int argc, char *argv) {
     free_field((void **) velocity_old);
     free_field((void **) density);
     free_field((void **) density_old);
+    SDL_FreeSurface(fluid);
 
     // Quit SDL
     SDL_Quit();
