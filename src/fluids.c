@@ -444,6 +444,11 @@ int main(int argc, char *argv) {
         SDL_Flip(screen);
     }
 
+    free_field((void **) velocity);
+    free_field((void **) velocity_old);
+    free_field((void **) density);
+    free_field((void **) density_old);
+
     // Quit SDL
     SDL_Quit();
 
