@@ -446,6 +446,17 @@ int main(int argc, char *argv) {
         density_step(density, density_old, velocity, DIFF, TIMESTEP);
 
         // -- draw density --
+        int i,j;
+        for(i=1; i<=SIZE_X; i++) {
+            for(j=1; j<=SIZE_Y; j++) {
+                // calculate gray value
+                Uint8 color = 255 * density[i][j];
+                // use calculated gray value for every color channel to acually get gray
+                Uint32 pixel_color = SDL_MapRGB(screen->format,color,color,color);
+                put_pixel32(fluid, i, j, pixel_color);
+            }
+        }
+
         // Apply image to screen
         SDL_BlitSurface(fluid, NULL, screen, NULL);
         // Update Screen
