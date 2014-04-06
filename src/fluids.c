@@ -100,9 +100,45 @@ void set_vector_field_boundary(vector_t **vector_field) {
 void set_vector_field_boundary_selective(vector_t **forcefield, int selector) {
     if(selector == 1) {
         //do x
+        int i;
+        // set top and bottom border
+        for(i=1; i<=SIZE_X; i++) {
+            forcefield[i][0].x = forcefield[i][1].x;
+            forcefield[i][SIZE_Y+1].x = forcefield[i][SIZE_Y].x;
+        }
+        
+        //set left and right border
+        for(i=1; i<=SIZE_Y; i++) {
+            forcefield[0][i].x = forcefield[1][i].x;
+            forcefield[SIZE_X+1][i].x = forcefield[SIZE_X][i].x;
+        }
+        
+        //improve corners
+        forcefield[0][0].x = 0.5 * (forcefield[1][0].x + forcefield[0][1].x);
+        forcefield[0][SIZE_Y+1].x = 0.5 * (forcefield[1][SIZE_Y+1].x + forcefield[0][SIZE_Y].x);
+        forcefield[SIZE_X+1][0].x = 0.5 * (forcefield[SIZE_X][0].x + forcefield[SIZE_X+1][1].x);
+        forcefield[SIZE_X+1][SIZE_Y+1].x = 0.5 * (forcefield[SIZE_X][SIZE_Y+1].x + forcefield[SIZE_X+1][SIZE_Y].x);
     }
     else {
         //do y
+        int i;
+        // set top and bottom border
+        for(i=1; i<=SIZE_X; i++) {
+            forcefield[i][0].y = forcefield[i][1].y;
+            forcefield[i][SIZE_Y+1].y = forcefield[i][SIZE_Y].y;
+        }
+        
+        //set left and right border
+        for(i=1; i<=SIZE_Y; i++) {
+            forcefield[0][i].y = forcefield[1][i].y;
+            forcefield[SIZE_X+1][i].y = forcefield[SIZE_X][i].y;
+        }
+        
+        //improve corners
+        forcefield[0][0].y = 0.5 * (forcefield[1][0].y + forcefield[0][1].y);
+        forcefield[0][SIZE_Y+1].y = 0.5 * (forcefield[1][SIZE_Y+1].y + forcefield[0][SIZE_Y].y);
+        forcefield[SIZE_X+1][0].y = 0.5 * (forcefield[SIZE_X][0].y + forcefield[SIZE_X+1][1].y);
+        forcefield[SIZE_X+1][SIZE_Y+1].y = 0.5 * (forcefield[SIZE_X][SIZE_Y+1].y + forcefield[SIZE_X+1][SIZE_Y].y);
     }
 
 }
