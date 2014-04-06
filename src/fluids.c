@@ -33,7 +33,7 @@ typedef struct vector {
 void add_float_field(float **field, float **sources, float dt) {
     int i,j;
     for(i=0; i<SIZE_X+2; i++) {
-        for(j=0; i<SIZE_Y+2; j++) {
+        for(j=0; j<SIZE_Y+2; j++) {
             field[i][j] += sources[i][j] * dt;
         }
     }
@@ -42,7 +42,7 @@ void add_float_field(float **field, float **sources, float dt) {
 void add_vector_field(vector_t **field, vector_t **sources, float dt) {
     int i,j;
     for(i=0; i<SIZE_X+2; i++) {
-        for(j=0; i<SIZE_Y+2; j++) {
+        for(j=0; j<SIZE_Y+2; j++) {
             field[i][j].x += sources[i][j].x * dt;
             field[i][j].y += sources[i][j].y * dt;
         }
