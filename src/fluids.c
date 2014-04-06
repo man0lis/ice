@@ -17,6 +17,9 @@
 // TODO: fingure this out
 #define VISC 0.0001
 
+// event struct for sdl
+SDL_Event event;
+
 // do you whant me to end the programm?
 volatile int stop = 0;
 
@@ -470,6 +473,14 @@ int main(int argc, char *argv) {
         SDL_BlitSurface(fluid, NULL, screen, NULL);
         // Update Screen
         SDL_Flip(screen);
+    
+        // handle events
+        while(SDL_PollEvent(&event)) {
+            if(event.type == SDL_QUIT) {
+                stop=1;
+            }
+        }
+ 
     }
 
     free_field((void **) velocity);
