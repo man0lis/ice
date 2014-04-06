@@ -28,6 +28,9 @@ void signal_callback(int i) {
         stop=1;
 }
 
+// max for desity field (for better desity drawing)
+float density_max = 0;
+
 typedef struct vector {
     float x;
     float y;
@@ -209,6 +212,9 @@ void apply_advection_1d(float **field, float **field_old, vector_t **vector_fiel
     float dt_x = dt*SIZE_X;
     float dt_y = dt*SIZE_Y;
 
+    // part of average hack for drawing
+    density_max = 0;
+
     for(i=1; i<=SIZE_X; i++) {
         for(j=1; j<=SIZE_Y; j++) {
 
@@ -240,6 +246,8 @@ void apply_advection_1d(float **field, float **field_old, vector_t **vector_fiel
                             s1 * (t0 * field_old[i1][j0] +
                                   t1 * field_old[i1][j1]);
 
+            // part of average hack for drawing
+            if(field[i][j] > density_max) density_max = field[i][j];
         }
     }
     set_field_boundary(field);
@@ -462,7 +470,7 @@ int main(int argc, char *argv) {
         for(i=1; i<=SIZE_X; i++) {
             for(j=1; j<=SIZE_Y; j++) {
                 // calculate gray value
-                Uint8 color = 255 * density[i][j];
+                Uint8 color = (255.0 * density[i][j]) / density_max;
                 // use calculated gray value for every color channel to acually get gray
                 Uint32 pixel_color = SDL_MapRGB(screen->format,color,color,color);
                 put_pixel32(fluid, i, j, pixel_color);
