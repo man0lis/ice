@@ -10,8 +10,8 @@
 // swap 2 variables or pointers or anything
 #define SWAP(x, y) do { typeof(x) temp##x##y = x; x = y; y = temp##x##y; } while (0)
 
-#define SIZE_X 512
-#define SIZE_Y 512
+#define SIZE_X 256
+#define SIZE_Y 256
 #define TIMESTEP 0.2
 #define DIFF 0.0005
 // TODO: fingure this out
