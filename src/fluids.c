@@ -457,6 +457,12 @@ int main(int argc, char *argv) {
         }
     }
 
+    // add vertical velocity for testing
+    for(y=0; y<=SIZE_Y; y++) {
+        velocity[(int) SIZE_X/2][y].x = 0;
+        velocity[(int) SIZE_X/2][y].y = 1;
+    }
+
     while(!stop) {
         // -- set fields --
         //TODO: set density from gui (maybe velocity)
