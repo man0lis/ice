@@ -457,6 +457,10 @@ int main(int argc, char *argv) {
         }
     }
 
+    int old_mouse_x = 0;
+    int old_mouse_y = 0;
+    int mouse_draw = 0;
+
     while(!stop) {
         // -- set fields --
         //TODO: set density from gui (maybe velocity)
@@ -488,6 +492,28 @@ int main(int argc, char *argv) {
             if(event.type == SDL_QUIT) {
                 stop=1;
             }
+            if(event.type == SDL_MOUSEMOTION) {
+                if(mouse_draw) {
+                    int k,l;
+                    for(k=event.motion.x-2; k<event.motion.x+2; k++) {
+                        for(l=event.motion.y-2; l<event.motion.y+2; l++) {
+                            velocity_old[k][l].x += (event.motion.x-old_mouse_x);
+                            velocity_old[k][l].y += (event.motion.y-old_mouse_y);
+                        }
+                    }
+                }
+
+                old_mouse_x = event.motion.x;
+                old_mouse_y = event.motion.y;
+            }
+            if(event.type == SDL_MOUSEBUTTONDOWN) {
+                mouse_draw = 1;
+            }
+
+            if(event.type == SDL_MOUSEBUTTONUP) {
+                mouse_draw = 0;
+            }
+
         }
         
         // prepare next simulation step
