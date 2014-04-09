@@ -13,9 +13,9 @@
 #define SIZE_X 256
 #define SIZE_Y 256
 #define TIMESTEP 0.2
-#define DIFF 0.0005
+#define DIFF 0.00001
 // TODO: fingure this out
-#define VISC 0.0001
+#define VISC 0.000015
 
 // event struct for sdl
 SDL_Event event;
