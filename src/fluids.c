@@ -488,6 +488,10 @@ int main(int argc, char *argv) {
                 stop=1;
             }
         }
+        
+        // prepare next simulation step
+        SWAP(velocity, velocity_old);
+        SWAP(density, density_old);
  
     }
 
